@@ -6,7 +6,167 @@
 </head>
 <body>
 <div layout:fragment="content">
-
+    <h2>
+        <span>欢迎使用</span>
+        <a target="_blank" th:href="@{siteurl}">
+            <span class="solo">&nbsp;Solo</span>
+        </a>
+    </h2>
+    <div id="init">
+        <div id="user" class="form" th:object="${user}">
+            <label for="userEmail">
+                邮箱：
+            </label>
+            <input th:field="*{userEmail}"/>
+            <label for="userName">
+                用户名：
+            </label>
+            <input th:field="*{userName}"/>
+            <label for="userPassword">
+                密码：
+            </label>
+            <input th:field="*{userPassword}"/>
+            <label for="userPasswordConfirm">
+                确认密码：
+            </label>
+            <input type="password" id="userPasswordConfirm"/>
+            <button onclick='getUserInfo();'>下一步</button>
+            <span id="tip"></span>
+        </div>
+        <div id="sys" class="none">
+            <p>请点击下面的“初始化”按钮进行初始化，然后稍等片刻</p>
+            <button onclick='initSys();' id="initButton">确定进行初始化吗？</button>
+            <button onclick='returnTo();'>上一步</button>
+            <span id="tipInit"></span>
+            <span class="clear"></span>
+        </div>
+    </div>
 </div>
+<th:block layout:fragment="script">
+    <script type="text/javascript">
+
+        var validate = function () {
+            var userName = $("#userName").val().replace(/(^\s*)|(\s*$)/g, "");
+            if (!/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i.test($("#userEmail").val())) {
+                $("#tip").text("邮箱格式不正确！");
+                $("#userEmail").focus();
+            } else if (2 > userName.length || userName.length > 20) {
+                $("#tip").text("姓名只能为 2 到 20 个字符！");
+                $("#userName").focus();
+            } else if ($("#userPassword").val().replace(/\s/g, "") === "") {
+                $("#tip").text("密码不能为空！");
+                $("#userPassword").focus();
+            } else if ($("#userPassword").val() !== $("#userPasswordConfirm").val()) {
+                $("#tip").text("两次输入的秘密不一致！");
+                $("#userPasswordConfirm").focus();
+            } else {
+                $("#tip").text("");
+                return true;
+            }
+            return false;
+        };
+
+        var getUserInfo = function () {
+            if (validate()) {
+                $("#init").animate({
+                    "top": -$('#user').height() + ($('.main h2').offset().top + 10)
+                });
+
+                $("#user").animate({
+                    "opacity": 0
+                });
+
+                $("#sys").css({
+                    "display": "block",
+                    "opacity": 1
+                });
+
+                $(window).unbind().keydown(function (e) {
+                    if (e.keyCode === 27) {// esc
+                        returnTo();
+                        $(window).unbind();
+                    } else if (e.keyCode === 13) {// enter
+                        initSys();
+                    }
+                });
+            }
+        };
+
+        var returnTo = function () {
+            $("#init").animate({
+                "top": $('.main h2').offset().top + 42
+            });
+
+            $("#user").animate({
+                "opacity": 1
+            });
+
+            $("#sys").animate({
+                "opacity": 0
+            }, 800, function () {
+                this.style.display = "none";
+            });
+        };
+
+        var initSys = function () {
+            var requestJSONObject = {
+                "userName": $("#userName").val(),
+                "userEmail": $("#userEmail").val(),
+                "userPassword": $("#userPassword").val()
+            };
+
+            if (confirm("确定进行初始化吗？")) {
+                $(window).unbind();
+                $("#tipInit").html("<img src='/image/loading.gif'/> loading...");
+
+                $.ajax({
+                    url: "/init",
+                    type: "POST",
+                    data: JSON.stringify(requestJSONObject),
+                    success: function (result, textStatus) {
+                        if (!result.sc) {
+                            $("#tipInit").text(result.msg);
+                            return;
+                        }
+
+                        window.location.href = "/admin-index.do#main";
+                    }
+                });
+            }
+        };
+
+        (function () {
+            try {
+                $("#userEmail").focus();
+                $("input").keypress(function (event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();
+                    }
+                });
+
+                $("#userPasswordConfirm").keypress(function (event) {
+                    if (event.keyCode === 13) {
+                        getUserInfo();
+                    }
+                });
+            } catch (e) {
+                document.querySelector('.main').innerHTML = "配置错误";
+            }
+
+            // if no JSON, add it.
+            try {
+                JSON
+            } catch (e) {
+                document.write("<script src=\"/js/lib/json2.js\"><\/script>");
+            }
+
+            $('.main').css({
+                height: '350px',
+                'overflow': 'hidden'
+            })
+        })();
+
+    </script>
+</th:block>
 </body>
 </html>
