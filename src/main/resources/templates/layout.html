@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)">
+    <meta name="robots" content="none"/>
+    <title>CathyBlog-th:text="${title}"</title>
+    <link type="text/css" rel="stylesheet"
+          th:href="@{/css/default-init.css}" charset="utf-8"/>
+    <link rel="icon" type="image/png" th:href="@{image/favicon.png}"/>
+    <link rel="apple-touch-icon" th:href="@{image/favicon.png}">
+</head>
+<body>
+<div class="wrap">
+    <div class="content">
+        <div class="logo">
+            <a href="https://b3log.org" target="_blank">
+                <img width="128" border="0" alt="Solo" title="Solo" th:src="@{image/logo.png}"/>
+            </a>
+        </div>
+        <div class="main" layout:fragment="content">
+        </div>
+        <span class="clear"></span>
+    </div>
+</div>
+<div class="footerWrapper" th:insert="fragments/footer::footer">
+</div>
+</body>
+</html>
