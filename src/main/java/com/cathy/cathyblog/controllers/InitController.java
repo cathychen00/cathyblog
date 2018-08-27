@@ -9,10 +9,7 @@ import com.cathy.cathyblog.service.InitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +23,7 @@ public class InitController {
     @Autowired
     InitService initService;
 
-    @RequestMapping(value = "/init",method = RequestMethod.GET)
+    @GetMapping(value = "/init")
     public String showInit(Model model){
         if (initService.isInited()) {
             return "redirect:/";
@@ -47,9 +44,9 @@ public class InitController {
         return "init";
     }
 
-    @RequestMapping(value = "/init", method = RequestMethod.POST)
+    @PostMapping(value = "/init")
     @ResponseBody
-    public ApiBaseModel<Integer> initSolo(User user) throws Exception {
+    public ApiBaseModel<Integer> initSolo(@ModelAttribute User user) {
         ApiBaseModel<Integer> result=new ApiBaseModel<Integer>();
         if (initService.isInited()) {
             result.setReturncode(-1);

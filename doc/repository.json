@@ -137,41 +137,6 @@
             ]
         },
         {
-            "name": "link",
-            "description": "链接表",
-            "keys": [
-                {
-                    "name": "oId",
-                    "description": "主键",
-                    "type": "String",
-                    "length": 19
-                },
-                {
-                    "name": "linkAddress",
-                    "description": "链接地址",
-                    "type": "String",
-                    "length": 255
-                },
-                {
-                    "name": "linkDescription",
-                    "description": "链接描述",
-                    "type": "String",
-                    "length": 255
-                },
-                {
-                    "name": "linkOrder",
-                    "description": "链接展现的排序",
-                    "type": "int"
-                },
-                {
-                    "name": "linkTitle",
-                    "description": "链接标题",
-                    "type": "String",
-                    "length": 255
-                }
-            ]
-        },
-        {
             "name": "page",
             "description": "自定义页面表",
             "keys": [
