@@ -122,12 +122,12 @@
                         "userPassword": $("#userPassword").val()
                     },
                     success: function (result, textStatus) {
-                        if (!result.sc) {
-                            $("#tipInit").text(result.msg);
+                        if(result.returncode!=0){
+                            $("#tipInit").text(result.message);
                             return;
                         }
 
-                        window.location.href = "/admin-index.do#main";
+                        window.location.href = "/admin-index";
                     }
                 });
             }

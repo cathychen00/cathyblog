@@ -185,7 +185,7 @@ public class InitServiceImpl implements InitService {
         admin.setUserPublishedArticleCount(1);
         userService.save(admin);
 //
-//            // Step 4: Add archive date-article relations
+//            // Step 5 todo Add archive date-article relations
 //            archiveDate(article);
 
         return article.getId();
