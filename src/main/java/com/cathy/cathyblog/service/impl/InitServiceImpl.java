@@ -8,6 +8,7 @@ import com.cathy.cathyblog.common.util.StringUtil;
 import com.cathy.cathyblog.common.util.ThumbnailUtil;
 import com.cathy.cathyblog.domain.*;
 import com.cathy.cathyblog.domain.extend.OptionKey;
+import com.cathy.cathyblog.repository.UserRepository;
 import com.cathy.cathyblog.service.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -177,16 +178,15 @@ public class InitServiceImpl implements InitService {
         statisticService.incStatistic(OptionKey.ID_C_STATISTIC_PUBLISHED_BLOG_COMMENT_COUNT);
         statisticService.incStatistic(OptionKey.ID_C_STATISTIC_BLOG_ARTICLE_COUNT);
         statisticService.incStatistic(OptionKey.ID_C_STATISTIC_PUBLISHED_ARTICLE_COUNT);
+
+        //4.update admin for article statistic
+        User admin=userService.getAdmin();
+        admin.setUserArticleCount(1);
+        admin.setUserPublishedArticleCount(1);
+        userService.save(admin);
 //
 //            // Step 4: Add archive date-article relations
 //            archiveDate(article);
-
-//            // Step 6: Update admin user for article statistic
-//            final JSONObject admin = userRepository.getAdmin();
-//
-//            admin.put(UserExt.USER_ARTICLE_COUNT, 1);
-//            admin.put(UserExt.USER_PUBLISHED_ARTICLE_COUNT, 1);
-//            userRepository.update(admin.optString(Keys.OBJECT_ID), admin);
 
         return article.getId();
     }

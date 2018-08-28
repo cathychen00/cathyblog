@@ -23,8 +23,15 @@ public class UserServiceTests {
         admin.setUserPassword("pwd");
         userService.save(admin);
 
-        User admin1=userService.getAdmin();
-        Assert.assertEquals(1,admin1.getId().intValue());
-        Assert.assertEquals(admin.getUserName(),admin1.getUserName());
+        admin=userService.getAdmin();
+        Assert.assertEquals(1,admin.getId().intValue());
+        Assert.assertEquals("admin",admin.getUserName());
+
+        admin.setUserArticleCount(1);
+        admin.setUserPublishedArticleCount(1);
+        userService.save(admin);
+        admin=userService.getAdmin();
+        Assert.assertEquals(1,admin.getUserArticleCount().intValue());
+        Assert.assertEquals(1,admin.getUserPublishedArticleCount().intValue());
     }
 }
