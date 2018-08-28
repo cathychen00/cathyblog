@@ -25,7 +25,7 @@
             <label for="userPassword">
                 密码：
             </label>
-            <input th:field="*{userPassword}"/>
+            <input th:field="*{userPassword}" type="password"/>
             <label for="userPasswordConfirm">
                 确认密码：
             </label>
@@ -109,12 +109,6 @@
         };
 
         var initSys = function () {
-            var requestJSONObject = {
-                "userName": $("#userName").val(),
-                "userEmail": $("#userEmail").val(),
-                "userPassword": $("#userPassword").val()
-            };
-
             if (confirm("确定进行初始化吗？")) {
                 $(window).unbind();
                 $("#tipInit").html("<img src='/image/loading.gif'/> loading...");
@@ -122,7 +116,11 @@
                 $.ajax({
                     url: "/init",
                     type: "POST",
-                    data: JSON.stringify(requestJSONObject),
+                    data: {
+                        "userName": $("#userName").val(),
+                        "userEmail": $("#userEmail").val(),
+                        "userPassword": $("#userPassword").val()
+                    },
                     success: function (result, textStatus) {
                         if (!result.sc) {
                             $("#tipInit").text(result.msg);

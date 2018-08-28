@@ -88,7 +88,7 @@ public class InitServiceImpl implements InitService {
         }
 
         try {
-            //todo init helloWorld();
+//            helloWorld();
         } catch (final Exception e) {
            //todo LOGGER.log(Level.ERROR, "Hello World error?!", e);
         }

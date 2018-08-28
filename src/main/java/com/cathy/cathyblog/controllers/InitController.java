@@ -46,7 +46,7 @@ public class InitController {
 
     @PostMapping(value = "/init")
     @ResponseBody
-    public ApiBaseModel<Integer> initSolo(@ModelAttribute User user) {
+    public ApiBaseModel<Integer> initSolo(User user) {
         ApiBaseModel<Integer> result=new ApiBaseModel<Integer>();
         if (initService.isInited()) {
             result.setReturncode(-1);
