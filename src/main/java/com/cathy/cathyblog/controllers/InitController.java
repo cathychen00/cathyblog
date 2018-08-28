@@ -6,20 +6,21 @@ import com.cathy.cathyblog.common.util.StringUtil;
 import com.cathy.cathyblog.domain.User;
 import com.cathy.cathyblog.domain.extend.UserExtend;
 import com.cathy.cathyblog.service.InitService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 站点初始化
  */
 @Controller
 public class InitController {
+    private static Logger logger = LoggerFactory.getLogger(InitController.class);
     @Autowired
     InitService initService;
 
@@ -85,7 +86,7 @@ public class InitController {
             result.setResult(1);
             return result;
         } catch (final Exception e) {
-            //todo LOGGER.log(Level.ERROR, e.getMessage(), e);
+            logger.error(e.getMessage(), e);
             result.setReturncode(-4);
             result.setMessage(e.getMessage());
             return result;

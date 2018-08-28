@@ -12,6 +12,8 @@ import com.cathy.cathyblog.service.InitService;
 import com.cathy.cathyblog.service.LinkService;
 import com.cathy.cathyblog.service.OptionService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ public class InitServiceImpl implements InitService {
     OptionService optionService;
     @Autowired
     LinkService linkService;
+    private static Logger logger = LoggerFactory.getLogger(InitServiceImpl.class);
 
     /**
      * 站点是否已经初始化
@@ -44,7 +47,7 @@ public class InitServiceImpl implements InitService {
             List<User> admins=userRepository.findAllByUserRole(UserRoles.ADMIN_ROLE);
             return admins!=null&&admins.size()>0;
         } catch (final Exception e) {
-//            todo LOGGER.log(Level.WARN, "Solo has not been initialized");
+            logger.warn("站点已经执行过初始化");
             return false;
         }
     }
@@ -59,8 +62,6 @@ public class InitServiceImpl implements InitService {
         if (isInited()) {
             return;
         }
-
-        //todo LOGGER.log(Level.DEBUG, "Solo is running with database [{0}], creates all tables", Latkes.getRuntimeDatabase());
 
         int retries = MAX_RETRIES_CNT;
 
@@ -77,20 +78,20 @@ public class InitServiceImpl implements InitService {
                 break;
             } catch (final Exception e) {
                 if (0 == retries) {
-                    //todo LOGGER.log(Level.ERROR, "Initialize error", e);
+                    logger.error("Initialize error", e);
                     throw new ServiceException("Initailize Solo error: " + e.getMessage());
                 }
 
                 // Allow retry to occur
                 --retries;
-                //todo LOGGER.log(Level.WARN, "Retrying to init Solo[retries={0}]", retries);
+                logger.warn("Retrying to init Solo[retries={0}]", retries);
             }
         }
 
         try {
 //            helloWorld();
         } catch (final Exception e) {
-           //todo LOGGER.log(Level.ERROR, "Hello World error?!", e);
+          logger.error( "Hello World error?!", e);
         }
 
         // todo init 同步作者
@@ -104,7 +105,7 @@ public class InitServiceImpl implements InitService {
     }
 
     private void initStatistic() {
-        //todo LOGGER.debug("Initializing statistic....");
+       logger.debug("Initializing statistic....");
 
         final Option statisticBlogArticleCountOpt = new Option();
         statisticBlogArticleCountOpt.setOptionKey(ID_C_STATISTIC_BLOG_ARTICLE_COUNT);
@@ -136,11 +137,11 @@ public class InitServiceImpl implements InitService {
         statisticPublishedBlogCommentCountOpt.setOptionCategory( CATEGORY_C_STATISTIC);
         optionService.add(statisticPublishedBlogCommentCountOpt);
 
-        //todo LOGGER.debug("Initialized statistic");
+        logger.debug("Initialized statistic");
     }
 
     private void initPreference(User user) {
-        //todo LOGGER.debug("Initializing preference....");
+        logger.debug("Initializing preference....");
 
         final Option noticeBoardOpt = new Option();
         noticeBoardOpt.setOptionKey(ID_C_NOTICE_BOARD);
@@ -366,11 +367,11 @@ public class InitServiceImpl implements InitService {
 //        Templates.MAIN_CFG.setServletContextForTemplateLoading(servletContext, "/skins/" + skinDirName);
 
 
-        //todo OGGER.debug("Initialized preference");
+        logger.debug("Initialized preference");
     }
 
     private void initReplyNotificationTemplate() throws Exception {
-        //todo LOGGER.debug("Initializing reply notification template");
+       logger.debug("Initializing reply notification template");
 
         //todo init replyNotificationTemplate
 //        final JSONObject replyNotificationTemplate = new JSONObject(DefaultPreference.DEFAULT_REPLY_NOTIFICATION_TEMPLATE);
@@ -388,11 +389,11 @@ public class InitServiceImpl implements InitService {
 //        bodyOpt.setOptionCategory(replyNotificationTemplate.optString("body"));
 //        optionService.add(bodyOpt);
 
-        //todo LOGGER.debug("Initialized reply notification template");
+       logger.debug("Initialized reply notification template");
     }
 
     private void initAdmin(User admin) throws Exception {
-        //todo LOGGER.debug("Initializing admin....");
+        logger.debug("Initializing admin....");
 //        admin.setUserURL(Latkes.getServePath());
         admin.setUserRole(UserRoles.ADMIN_ROLE);
         admin.setUserPassword( DigestUtils.md5Hex(admin.getUserPassword()));
@@ -402,7 +403,7 @@ public class InitServiceImpl implements InitService {
 
         userRepository.save(admin);
 
-        //todo LOGGER.debug("Initialized admin");
+        logger.debug("Initialized admin");
     }
 
     private void initLink() throws Exception {
