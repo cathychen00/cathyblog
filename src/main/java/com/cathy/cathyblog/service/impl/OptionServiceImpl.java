@@ -11,27 +11,27 @@ import org.springframework.stereotype.Service;
 public class OptionServiceImpl implements OptionService {
     @Autowired
     OptionRepository optionRepository;
-    @Autowired
-    RedisTemplate redisTemplate;
+//    @Autowired
+//    RedisTemplate redisTemplate;
     @Override
     public Option getByOptionKey(String key) {
-        Object cachevalue = redisTemplate.opsForValue().get(key);
-        if (null != cachevalue) {
-            return  (Option)cachevalue;
-        }
+//        Object cachevalue = redisTemplate.opsForValue().get(key);
+//        if (null != cachevalue) {
+//            return  (Option)cachevalue;
+//        }
 
         Option ret = optionRepository.getByOptionKey(key);
         if (null == ret) {
             return null;
         }
 
-        redisTemplate.opsForValue().set(key,ret);
+//        redisTemplate.opsForValue().set(key,ret);
         return ret;
     }
 
     @Override
     public void add(Option option) {
         optionRepository.save(option);
-        redisTemplate.opsForValue().set(option.getOptionKey(),option);
+//        redisTemplate.opsForValue().set(option.getOptionKey(),option);
     }
 }

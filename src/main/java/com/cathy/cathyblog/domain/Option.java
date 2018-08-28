@@ -11,6 +11,7 @@ import javax.persistence.Id;
 public class Option {
     @Id
     @GeneratedValue
+    private Integer id;
     private String optionKey;
     /**
      * 配置项值
