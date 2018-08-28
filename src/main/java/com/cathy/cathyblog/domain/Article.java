@@ -33,7 +33,7 @@ public class Article {
     /**
      * 文章评论计数
      */
-    private String articleCommentCount;
+    private Integer articleCommentCount;
     /**
      * 浏览数
      */

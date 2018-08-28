@@ -1,4 +1,4 @@
-package com.cathy.cathyblog.repository;
+package com.cathy.cathyblog.service;
 
 import com.cathy.cathyblog.CathyblogApplication;
 import com.cathy.cathyblog.common.consts.UserRoles;
@@ -10,27 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CathyblogApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
-public class UserRpositoryTests {
+public class UserServiceTests {
     @Autowired
-    UserRepository userRepository;
-
+    UserService userService;
     @Test
-    public void findAllByUserRole(){
-        List<User> admins=userRepository.findAllByUserRole(UserRoles.ADMIN_ROLE);
-        Assert.assertEquals(0,admins.size());
-    }
-
-    @Test
-    public void save(){
+    public void test(){
         User admin=new User();
         admin.setUserRole(UserRoles.ADMIN_ROLE);
         admin.setUserName("admin");
         admin.setUserPassword("pwd");
-        userRepository.save(admin);
-        Assert.assertEquals(1,admin.getId().intValue());
+        userService.save(admin);
+
+        User admin1=userService.getAdmin();
+        Assert.assertEquals(1,admin1.getId().intValue());
+        Assert.assertEquals(admin.getUserName(),admin1.getUserName());
     }
 }

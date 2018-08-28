@@ -1,23 +1,22 @@
 package com.cathy.cathyblog.service.impl;
 
 import com.cathy.cathyblog.common.consts.UserRoles;
+import com.cathy.cathyblog.common.exceptions.RepositoryException;
 import com.cathy.cathyblog.common.exceptions.ServiceException;
 import com.cathy.cathyblog.common.util.IdUtil;
 import com.cathy.cathyblog.common.util.ThumbnailUtil;
+import com.cathy.cathyblog.domain.Article;
 import com.cathy.cathyblog.domain.Link;
 import com.cathy.cathyblog.domain.Option;
 import com.cathy.cathyblog.domain.User;
-import com.cathy.cathyblog.repository.UserRepository;
-import com.cathy.cathyblog.service.InitService;
-import com.cathy.cathyblog.service.LinkService;
-import com.cathy.cathyblog.service.OptionService;
+import com.cathy.cathyblog.service.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Date;
 
 import static com.cathy.cathyblog.domain.extend.OptionKey.*;
 
@@ -29,11 +28,13 @@ public class InitServiceImpl implements InitService {
     private static final int MAX_RETRIES_CNT = 3;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
     @Autowired
     OptionService optionService;
     @Autowired
     LinkService linkService;
+    @Autowired
+    ArticleService articleService;
     private static Logger logger = LoggerFactory.getLogger(InitServiceImpl.class);
 
     /**
@@ -44,8 +45,8 @@ public class InitServiceImpl implements InitService {
     @Override
     public boolean isInited() {
         try {
-            List<User> admins=userRepository.findAllByUserRole(UserRoles.ADMIN_ROLE);
-            return admins!=null&&admins.size()>0;
+            User admin=userService.getAdmin();
+            return admin!=null;
         } catch (final Exception e) {
             logger.warn("站点已经执行过初始化");
             return false;
@@ -89,7 +90,7 @@ public class InitServiceImpl implements InitService {
         }
 
         try {
-//            helloWorld();
+            helloWorld();
         } catch (final Exception e) {
           logger.error( "Hello World error?!", e);
         }
@@ -102,6 +103,89 @@ public class InitServiceImpl implements InitService {
 //        }
 
         //todo init加载插件 pluginManager.load();
+    }
+
+    private void helloWorld() throws RepositoryException {
+        final Article article=new Article();
+
+        article.setArticleTitle("世界，你好！");
+        final String content = "欢迎使用cathyblog博客系统。这是系统自动生成的演示文章，编辑或者删除它，然后开始你的独立博客之旅！";
+        article.setArticleAbstract(content);
+        article.setArticleContent(content);
+        article.setArticleTags("blog");
+        article.setArticlePermalink("hello");
+        article.setArticleIsPublished(true);
+        article.setArticleHadBeenPublished(true);
+        article.setArticleSignId(1);
+        article.setArticleCommentable(true);
+        article.setArticleCommentCount(1);
+        article.setArticleViewCount(1);
+        final Date date = new Date();
+        article.setArticleCreateDate(date);
+        article.setArticleUpdateDate(date);
+        article.setArticlePutTop(false);
+        article.setArticleRandomDouble(Math.random());
+        article.setArticleViewPwd("");
+
+
+        final Integer articleId = addHelloWorldArticle(article);
+//
+//        final JSONObject comment = new JSONObject();
+//
+//        comment.put(Keys.OBJECT_ID, articleId);
+//        comment.put(Comment.COMMENT_NAME, "Daniel");
+//        comment.put(Comment.COMMENT_EMAIL, "d@b3log.org");
+//        comment.put(Comment.COMMENT_URL, "https://hacpai.com/member/88250");
+//        comment.put(Comment.COMMENT_CONTENT, langPropsService.get("helloWorld.comment.content"));
+//        comment.put(Comment.COMMENT_ORIGINAL_COMMENT_ID, "");
+//        comment.put(Comment.COMMENT_ORIGINAL_COMMENT_NAME, "");
+//        comment.put(Comment.COMMENT_THUMBNAIL_URL, Solos.GRAVATAR + "59a5e8209c780307dbe9c9ba728073f5??s=60&r=G");
+//        comment.put(Comment.COMMENT_DATE, date);
+//        comment.put(Comment.COMMENT_ON_ID, articleId);
+//        comment.put(Comment.COMMENT_ON_TYPE, Article.ARTICLE);
+//        final String commentId = Ids.genTimeMillisId();
+//
+//        comment.put(Keys.OBJECT_ID, commentId);
+//        final String commentSharpURL = Comments.getCommentSharpURLForArticle(article, commentId);
+//
+//        comment.put(Comment.COMMENT_SHARP_URL, commentSharpURL);
+//
+//        commentRepository.add(comment);
+
+        logger.info("Hello World!");
+    }
+
+    private Integer addHelloWorldArticle(Article article) throws RepositoryException {
+        //1.add article
+        articleService.save(article);
+        if(article.getId()==null){
+            return null;
+        }
+//            // 2 Add tags
+//            final String tagsString = article.optString(Article.ARTICLE_TAGS_REF);
+//            final String[] tagTitles = tagsString.split(",");
+//            final JSONArray tags = tag(tagTitles, article);
+//
+//            // Step 2: Add tag-article relations
+//            addTagArticleRelation(tags, article);
+//            // Step 3: Inc blog article and comment count statictis
+//            statisticMgmtService.incBlogCommentCount();
+//            statisticMgmtService.incPublishedBlogCommentCount();
+//            statisticMgmtService.incBlogArticleCount();
+//            statisticMgmtService.incPublishedBlogArticleCount();
+//
+//            // Step 4: Add archive date-article relations
+//            archiveDate(article);
+//            // Step 5: Add article
+//            articleRepository.add(article);
+//            // Step 6: Update admin user for article statistic
+//            final JSONObject admin = userRepository.getAdmin();
+//
+//            admin.put(UserExt.USER_ARTICLE_COUNT, 1);
+//            admin.put(UserExt.USER_PUBLISHED_ARTICLE_COUNT, 1);
+//            userRepository.update(admin.optString(Keys.OBJECT_ID), admin);
+
+        return article.getId();
     }
 
     private void initStatistic() {
@@ -401,7 +485,7 @@ public class InitServiceImpl implements InitService {
         admin.setUserPublishedArticleCount( 0);
         admin.setUserAvatar(ThumbnailUtil.getGravatarURL(admin.getUserEmail(), "128"));
 
-        userRepository.save(admin);
+        userService.save(admin);
 
         logger.debug("Initialized admin");
     }
