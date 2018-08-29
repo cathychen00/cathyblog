@@ -42,6 +42,7 @@ public class IndexController {
             int pageSize= Integer.parseInt(preference.get(OptionKey.ID_C_ARTICLE_LIST_DISPLAY_COUNT));
             Page<Article> articles=articleService.selectNoCritia(pageIndex,pageSize);
             model.addAttribute("articles",articles);
+            model.addAttribute("pageTitle",preference.get(OptionKey.ID_C_BLOG_TITLE));
             //todo 换肤
 //            // https://github.com/b3log/solo/issues/12060
 //            String specifiedSkin = Skins.getSkinDirName(request);

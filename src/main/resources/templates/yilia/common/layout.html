@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title th:text="${pageTitle}"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Window-target" content="_top"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/css/yilia/yilia.css}" charset="utf-8"/>
+    <link rel="icon" type="image/png" th:href="@{/image/favicon.png}"/>
+    <meta name="keywords" th:content="${metaKeywords}"/>
+    <meta name="description" th:content="${metaDescription}"/>
+</head>
+<body>
+<th:block th:value="${htmlHead}"></th:block>
+<div class="side" th:insert="/yilia/common/side::side">
+</div>
+<main >
+    <th:block layout:fragment="content"></th:block>
+    <footer class="footer" th:insert="/yilia/common/footer::footer">
+    </footer>
+</main>
+
+<script type="text/javascript" th:src="@{js/lib/jquery/jquery.min.js}" charset="utf-8"></script>
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>

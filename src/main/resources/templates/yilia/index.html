@@ -1,21 +1,4 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8"/>
-    <title>首页</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Window-target" content="_top"/>
-    <link type="text/css" rel="stylesheet" th:href="@{/css/yilia/yilia.css}" charset="utf-8"/>
-    <link rel="icon" type="image/png" th:href="@{/image/favicon.png}"/>
-    <meta name="keywords" th:content="${metaKeywords}"/>
-    <meta name="description" th:content="${metaDescription}"/>
-</head>
-<body>
-<th:block th:value="${htmlHead}"></th:block>
-<!--<#include "side.ftl">-->
-<main>
-    <!--<#include "article-list.ftl">-->
-    <!--<#include "footer.ftl">-->
-</main>
-</body>
-</html>
+<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="/yilia/common/layout">
+<div layout:fragment="content">
+</div>
