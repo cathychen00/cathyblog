@@ -8,7 +8,9 @@ import com.cathy.cathyblog.service.OptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OptionServiceImpl implements OptionService {
@@ -40,7 +42,7 @@ public class OptionServiceImpl implements OptionService {
     }
 
     @Override
-    public List<Option> getPreference() throws ServiceException {
+    public Map<String,String> getPreference() throws ServiceException {
         try {
             final Option checkInit = optionRepository.getByOptionKey(OptionKey.ID_C_ADMIN_EMAIL);
             if (null == checkInit) {
@@ -53,8 +55,13 @@ public class OptionServiceImpl implements OptionService {
                 List<Option> list = optionRepository.getByOptionCategory(OptionKey.CATEGORY_C_PREFERENCE);
 //                preferenceCache.putPreference(ret);
 //            }
-
-            return list;
+            Map<String,String> map=new HashMap<>();
+            if(list!=null&&list.size()>0){
+                for(Option item:list ){
+                    map.put(item.getOptionKey(),item.getOptionValue());
+                }
+            }
+            return map;
         } catch (Exception e) {
             throw new ServiceException(e);
         }

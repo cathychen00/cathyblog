@@ -1,18 +1,23 @@
 package com.cathy.cathyblog.controllers;
 
 import com.cathy.cathyblog.common.exceptions.ServiceException;
+import com.cathy.cathyblog.controllers.util.Fill;
+import com.cathy.cathyblog.domain.Article;
 import com.cathy.cathyblog.domain.Option;
+import com.cathy.cathyblog.domain.extend.OptionKey;
+import com.cathy.cathyblog.service.ArticleService;
 import com.cathy.cathyblog.service.OptionService;
 import com.cathy.cathyblog.service.StatisticService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class IndexController {
@@ -21,10 +26,22 @@ public class IndexController {
     OptionService optionService;
     @Autowired
     StatisticService statisticService;
-    @GetMapping(value = "/{currentPageNum}")
-    public String index(@PathVariable Integer currentPageNum, HttpServletRequest request, HttpServletResponse response) {
+    @Autowired
+    ArticleService articleService;
+    @Autowired
+    Fill fill;
+
+    @GetMapping(value = "/{pageIndex}")
+    public String index(@PathVariable Integer pageIndex,Model model) {
+        if(pageIndex==null){
+            pageIndex=1;
+        }
+
         try {
-            final List<Option> preference = optionService.getPreference();
+            final Map<String,String> preference = optionService.getPreference();
+            int pageSize= Integer.parseInt(preference.get(OptionKey.ID_C_ARTICLE_LIST_DISPLAY_COUNT));
+            Page<Article> articles=articleService.selectNoCritia(pageIndex,pageSize);
+            model.addAttribute("articles",articles);
             //todo 换肤
 //            // https://github.com/b3log/solo/issues/12060
 //            String specifiedSkin = Skins.getSkinDirName(request);
@@ -60,7 +77,7 @@ public class IndexController {
 //            filler.fillIndexArticles(request, dataModel, currentPageNum, preference);
 //
 //            filler.fillSide(request, dataModel, preference);
-//            filler.fillBlogHeader(request, response, dataModel, preference);
+            fill.fillBlogHeader(model, preference);
 //            filler.fillBlogFooter(request, dataModel, preference);
 //
 //            dataModel.put(Pagination.PAGINATION_CURRENT_PAGE_NUM, currentPageNum);
@@ -85,6 +102,6 @@ public class IndexController {
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        return "index";
+        return "yilia/index";
     }
 }
