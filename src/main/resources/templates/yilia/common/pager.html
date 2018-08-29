@@ -1,0 +1,33 @@
+<nav class="pagination" th:fragment="pager">
+    <th:block th:with="baseUrl=${#httpServletRequest.getRequestURL().toString()},pars=${#httpServletRequest.getQueryString() eq null ? '' : new String(#httpServletRequest.getQueryString().getBytes('iso8859-1'), 'UTF-8')}">
+        <th:block th:with="newPar=${new java.lang.String(pars eq null ? '' : pars).replace('page='+(datas.number), '')},
+curTmpUrl=${baseUrl+'?'+newPar},
+curUrl=${curTmpUrl.endsWith('&amp;') ? curTmpUrl.substring(0, curTmpUrl.length()-1):curTmpUrl}" >
+
+            <a th:unless="${datas.number eq 0}" href="#" th:href="@{${curUrl}(page=0)}" class="extend">首页</a>
+            <a th:unless="${datas.number eq 0}" href="#" th:href="@{${curUrl}(page=${datas.number-1})}" class="extend">上一页</a>
+
+            <!--总页数小于等于10-->
+            <th:block th:if="${(datas.totalPages le 10) and (datas.totalPages gt 0)}" th:remove="tag">
+                <th:block th:each="pg : ${#numbers.sequence(0, datas.totalPages - 1)}" th:remove="tag">
+                    <span th:if="${pg eq datas.getNumber()}" th:remove="tag" th:text="${pg+1}" class="current page-num">${pageNumber}</span>
+                    <a th:unless="${pg eq datas.getNumber()}" href="#" th:href="@{${curUrl}(page=${pg})}" th:text="${pg+1}" class="page-num"></a>
+                </th:block>
+
+
+                <!-- 总数数大于10时 -->
+            <th:block th:if="${datas.totalPages gt 10}" th:remove="tag">
+                <a th:if="${datas.number-2 ge 0}" href="#" th:href="@{${curUrl}(page=${datas.number}-2)}" th:text="${datas.number-1}" class="page-num"></a>
+                <a th:if="${datas.number-1 ge 0}" href="#" th:href="@{${curUrl}(page=${datas.number}-1)}" th:text="${datas.number}" class="page-num"></a>
+                <span th:text="${datas.number+1}" class="current page-num"></span>
+                <a th:if="${datas.number+1 lt datas.totalPages}" href="#" th:href="@{${curUrl}(page=${datas.number}+1)}" th:text="${datas.number+2}" class="page-num"></a>
+                <a th:if="${datas.number+2 lt datas.totalPages}" href="#" th:href="@{${curUrl}(page=${datas.number}+2)}" th:text="${datas.number+3}" class="page-num"></a>
+            </th:block>
+
+            <a th:if="${datas.hasNext()}" href="#" th:href="@{${curUrl}(page=${datas.number+1})}" class="extend">下一页</a>
+            <a href="#" th:href="${datas.totalPages le 0 ? curUrl+'page=0':curUrl+'&amp;page='+(datas.totalPages-1)}" class="extend">尾页</a>
+            <span th:utext="'共'+${datas.totalPages}+'页 / '+${datas.totalElements}+' 条'"></span>
+        </th:block>
+    </th:block>
+    </th:block>
+</nav>

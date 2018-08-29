@@ -3,7 +3,6 @@ package com.cathy.cathyblog.controllers;
 import com.cathy.cathyblog.common.exceptions.ServiceException;
 import com.cathy.cathyblog.controllers.util.Fill;
 import com.cathy.cathyblog.domain.Article;
-import com.cathy.cathyblog.domain.Option;
 import com.cathy.cathyblog.domain.extend.OptionKey;
 import com.cathy.cathyblog.service.ArticleService;
 import com.cathy.cathyblog.service.OptionService;
@@ -14,9 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -31,17 +29,17 @@ public class IndexController {
     @Autowired
     Fill fill;
 
-    @GetMapping(value = "/{pageIndex}")
-    public String index(@PathVariable Integer pageIndex,Model model) {
-        if(pageIndex==null){
-            pageIndex=1;
+    @GetMapping(value = "")
+    public String index(@RequestParam Integer page, Model model) {
+        if(page==null){
+            page=1;
         }
 
         try {
             final Map<String,String> preference = optionService.getPreference();
             int pageSize= Integer.parseInt(preference.get(OptionKey.ID_C_ARTICLE_LIST_DISPLAY_COUNT));
-            Page<Article> articles=articleService.selectNoCritia(pageIndex,pageSize);
-            model.addAttribute("articles",articles);
+            Page<Article> articles=articleService.selectNoCritia(page,pageSize);
+            model.addAttribute("datas",articles);
             model.addAttribute("pageTitle",preference.get(OptionKey.ID_C_BLOG_TITLE));
             //todo 换肤
 //            // https://github.com/b3log/solo/issues/12060
