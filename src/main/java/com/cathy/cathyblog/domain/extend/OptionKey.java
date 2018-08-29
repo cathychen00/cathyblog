@@ -349,7 +349,7 @@ public class OptionKey {
         /**
          * Default skin directory name.
          */
-        public static final String DEFAULT_SKIN_DIR_NAME = "Medium";
+        public static final String DEFAULT_SKIN_DIR_NAME = "yilia";
 
         /**
          * Default language.

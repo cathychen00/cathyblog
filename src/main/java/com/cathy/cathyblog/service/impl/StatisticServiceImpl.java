@@ -1,6 +1,7 @@
 package com.cathy.cathyblog.service.impl;
 
 import com.cathy.cathyblog.common.exceptions.RepositoryException;
+import com.cathy.cathyblog.common.exceptions.ServiceException;
 import com.cathy.cathyblog.domain.Option;
 import com.cathy.cathyblog.domain.extend.OptionKey;
 import com.cathy.cathyblog.repository.OptionRepository;
@@ -20,10 +21,10 @@ public class StatisticServiceImpl implements StatisticService {
     private static Logger logger = LoggerFactory.getLogger(StatisticServiceImpl.class);
 
     @Override
-    public void incStatistic(String key) throws RepositoryException {
+    public void incStatistic(String key) throws ServiceException {
         final Option statistic = optionRepository.getByOptionKey(key);
         if (null == statistic) {
-            throw new RepositoryException("Not found statistic");
+            throw new ServiceException("Not found statistic");
         }
         Integer count=Integer.parseInt(statistic.getOptionValue())+1;
         statistic.setOptionValue(count.toString());

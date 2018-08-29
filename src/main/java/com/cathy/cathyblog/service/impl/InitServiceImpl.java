@@ -1,14 +1,12 @@
 package com.cathy.cathyblog.service.impl;
 
 import com.cathy.cathyblog.common.consts.UserRoles;
-import com.cathy.cathyblog.common.exceptions.RepositoryException;
 import com.cathy.cathyblog.common.exceptions.ServiceException;
 import com.cathy.cathyblog.common.util.IdUtil;
 import com.cathy.cathyblog.common.util.StringUtil;
 import com.cathy.cathyblog.common.util.ThumbnailUtil;
 import com.cathy.cathyblog.domain.*;
 import com.cathy.cathyblog.domain.extend.OptionKey;
-import com.cathy.cathyblog.repository.UserRepository;
 import com.cathy.cathyblog.service.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
@@ -111,7 +109,7 @@ public class InitServiceImpl implements InitService {
         //todo init加载插件 pluginManager.load();
     }
 
-    private void helloWorld() throws RepositoryException {
+    private void helloWorld() throws ServiceException {
         final Article article = new Article();
 
         article.setArticleTitle("世界，你好！");
@@ -161,7 +159,7 @@ public class InitServiceImpl implements InitService {
         logger.info("Hello World!");
     }
 
-    private Integer addHelloWorldArticle(Article article) throws RepositoryException {
+    private Integer addHelloWorldArticle(Article article) throws ServiceException {
         //1.add article
         articleService.save(article);
         if (article.getId() == null) {
@@ -191,7 +189,7 @@ public class InitServiceImpl implements InitService {
         return article.getId();
     }
 
-    private List<Tag> saveTags(final Article article, final String[] tagTitles) throws RepositoryException {
+    private List<Tag> saveTags(final Article article, final String[] tagTitles) throws ServiceException {
         List<Tag> tags = new ArrayList<>();
 
         for (int i = 0; i < tagTitles.length; i++) {
