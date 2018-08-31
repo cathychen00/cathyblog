@@ -6,4 +6,5 @@ public interface UserService {
     User getAdmin();
 
     void save(User admin);
+    User getByEmail(String email);
 }

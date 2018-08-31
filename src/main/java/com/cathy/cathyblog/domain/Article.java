@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 
 @Entity
@@ -69,4 +70,6 @@ public class Article {
      * 文章浏览密码，留空为不设置访问密码
      */
     private String articleViewPwd;
+    @Transient
+    private User author;
 }

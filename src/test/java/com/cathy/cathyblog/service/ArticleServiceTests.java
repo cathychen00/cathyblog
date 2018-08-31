@@ -18,15 +18,17 @@ public class ArticleServiceTests {
     ArticleService articleService;
     @Test
     public void test(){
-        Article article=new Article();
-        article.setArticleTitle("test title");
-        article.setArticleContent("<p>test content</p>");
-        article.setArticleIsPublished(true);
-        article.setArticleHadBeenPublished(true);
-        article.setArticleCreateDate(new Date());
-        article.setArticleUpdateDate(new Date());
-        articleService.save(article);
-        Page<Article> page=articleService.selectNoCritia(1,5);
-        System.out.println(page.getTotalElements());
+//        Article article=new Article();
+//        article.setArticleTitle("test title");
+//        article.setArticleContent("<p>test content</p>");
+//        article.setArticleIsPublished(true);
+//        article.setArticleHadBeenPublished(true);
+//        article.setArticleCreateDate(new Date());
+//        article.setArticleUpdateDate(new Date());
+//        articleService.save(article);
+        Page<Article> page=articleService.selectNoCritia(0,5);
+        for(Article item:page){
+            System.out.println(item.getId());
+        }
     }
 }

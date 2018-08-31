@@ -1,6 +1,30 @@
 <!DOCTYPE html>
-<html  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="/yilia/common/layout">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" layout:decorator="/yilia/common/layout">
 <div layout:fragment="content">
-
+    <th:block th:each="article : ${datas}">
+        <article class="show">
+            <header>
+                <h2>
+                    <a rel="bookmark" th:href="@{article.articlePermalink}" th:text="${article.articleTitle}"></a>
+                    <sup th:if="${article.articlePutTop}">置顶</sup>
+                </h2>
+                <time><span class="icon-date"></span>
+                    <th:block th:text="${#dates.format(article.articleCreateDate,'yyyy-MM-dd HH:mm:ss')}"></th:block>
+                </time>
+            </header>
+            <section class="abstract article-body" th:utext="${article.articleAbstract}">
+            </section>
+            <footer class="tags" th:unless="${article.getArticleTags()==null}">
+                <span class="icon-tag"></span> &nbsp;
+                <th:block th:each="articleTag,status : ${#strings.arraySplit(article.getArticleTags(), ',')}">
+                    <a class="tag" rel="tag" th:href="'/tags/'+${articleTag}" th:text="${articleTag}"></a>
+                </th:block>
+                <a rel="nofollow" th:href="'/authors/'+${article.author.getId()}">
+                    <img class="avatar" th:title="${article.author.userName}" th:alt="${article.author.userName}"
+                         th:src="${article.author.userAvatar}"/>
+                </a>
+            </footer>
+        </article>
+    </th:block>
     <div th:replace="/yilia/common/pager::pager" th:remove="tag"></div>
 </div>

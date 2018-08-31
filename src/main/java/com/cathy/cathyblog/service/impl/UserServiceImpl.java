@@ -35,4 +35,13 @@ public class UserServiceImpl implements UserService {
     public void save(User admin) {
         userRepository.save(admin);
     }
+
+    @Override
+    public User getByEmail(String email) {
+        List<User> users=userRepository.findAllByUserEmail(email);
+        if(users==null||users.isEmpty()){
+            return null;
+        }
+        return users.get(0);
+    }
 }

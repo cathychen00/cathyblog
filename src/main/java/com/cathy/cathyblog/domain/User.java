@@ -36,4 +36,5 @@ public class User {
      * 头像
      */
     private String userAvatar;
+    private String authorThumbnailURL;
 }

@@ -30,7 +30,7 @@ public class IndexController {
     Fill fill;
 
     @GetMapping(value = "")
-    public String index(@RequestParam Integer page, Model model) {
+    public String index(@RequestParam(required = false,defaultValue = "0") Integer page, Model model) {
         if(page==null){
             page=1;
         }
